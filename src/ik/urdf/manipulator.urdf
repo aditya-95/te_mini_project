@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+<robot name="manipulator">
+
+    <material name="yellow">
+        <color rgba="1 0.7 0 1" />
+    </material>
+
+    <link name="world"></link>
+
+    <link name="base">
+        <visual>
+            <origin xyz="0 0 0.1" />
+            <geometry>
+                <cylinder length="0.2" radius="0.2" />
+            </geometry>
+            <material name="yellow"/>
+        </visual>
+    </link>
+
+    <link name="l1">
+        <visual>
+            <origin xyz="0 0 0" />
+            <geometry>
+                <cylinder length="0.2" radius="0.05" />
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="0.5 0 0" rpy="0 1.57 0" />
+            <geometry>
+                <cylinder length="1" radius="0.05" />
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="l2">
+        <visual>
+            <origin xyz="0 0 0" />
+            <geometry>
+                <cylinder length="0.2" radius="0.05" />
+            </geometry>
+        </visual>
+        <visual>
+            <origin xyz="0.35 0 0" rpy="0 1.57 0" />
+            <geometry>
+                <cylinder length="0.7" radius="0.05" />
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="l3">
+        <visual>
+            <geometry>
+                <box size="0.15 0.15 0.2"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+    </link>
+
+    <link name="l4">
+        <visual>
+            <origin xyz="0 0 0" />
+            <geometry>
+                <cylinder length="0.2" radius="0.05" />
+            </geometry>
+            <material name="white">
+                <color rgba="1 1 1 1"/>
+            </material>
+        </visual>
+        <visual>
+            <origin xyz="0.1 0 0" rpy="0 1.57 0" />
+            <geometry>
+                <cylinder length="0.1" radius="0.05" />
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="l5">
+        <visual>
+            <geometry>
+                <box size="0.2 0.2 0.02"/>
+            </geometry>
+        </visual>    
+    </link>
+
+    <joint name="world_to_base" type="revolute">
+        <parent link="world"/>
+        <child link="base"/>
+        <origin xyz="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+    <joint name="base_to_l1" type="revolute">
+        <parent link="base"/>
+        <child link="l1"/>
+        <origin xyz="0 0 0.25" rpy="1.57 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+    <joint name="l1_to_l2" type="revolute">
+        <parent link="l1"/>
+        <child link="l2"/>
+        <origin xyz="1 0 0" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+    <joint name="l2_to_l3" type="revolute">
+        <parent link="l2"/>
+        <child link="l3"/>
+        <origin xyz="0.7 0 0" rpy="0 1.57 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+    <joint name="l3_to_l4" type="revolute">
+        <parent link="l3"/>
+        <child link="l4"/>
+        <origin xyz="0 0 0.15" rpy="0 -1.57 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+    <joint name="l4_to_l5" type="revolute">
+        <parent link="l4"/>
+        <child link="l5"/>
+        <origin xyz="0.15 0 0" rpy="0 1.57 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.1" upper="3.1" effort="0.1" velocity="0.2"/>
+    </joint>
+
+</robot>
