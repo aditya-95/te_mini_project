@@ -69,13 +69,13 @@ Visualization Manager:
       Value: false
     - Class: rviz_default_plugins/InteractiveMarkers
       Enable Transparency: true
-      Enabled: false
+      Enabled: true
       Interactive Markers Namespace: /basic_control
       Name: InteractiveMarkers
       Show Axes: false
       Show Descriptions: false
       Show Visual Aids: false
-      Value: false
+      Value: true
     - Alpha: 0.8500000238418579
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -183,25 +183,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 1.3427693843841553
+      Distance: 0.8387907147407532
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.4491748511791229
-        Y: -0.3562299907207489
-        Z: 0.6550763845443726
+        X: 0.4776790738105774
+        Y: -0.3695775270462036
+        Z: 0.37893950939178467
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.22979862987995148
+      Pitch: 0.09979864209890366
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.742267608642578
+      Yaw: 5.182261943817139
     Saved: ~
 Window Geometry:
   Displays:
