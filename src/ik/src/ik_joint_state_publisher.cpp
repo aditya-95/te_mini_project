@@ -21,6 +21,10 @@
 #include "kdl/chainiksolverpos_lma.hpp"
 #include "kdl_parser/kdl_parser.hpp"
 #include "urdf/model.h"
+#include "kdl/jntarray.hpp"
+#include "kdl/chainfksolverpos_recursive.hpp"
+#include "kdl/chainiksolvervel_pinv.hpp"
+#include "kdl/chainiksolverpos_nr_jl.hpp"
 
 using namespace std::chrono_literals;
 
@@ -49,15 +53,38 @@ public:
             std::cerr << "failed to extract chain from KDL tree" << std::endl;
         }
 
-        KDL::JntArray q_init(chain.getNrOfJoints());
-        q_init(0) = 0.0;
-        q_init(1) = 0.0;
-        q_init(2) = 0.0;
-        q_init(3) = 0.0;
-        q_init(4) = 0.0;
-        q_init(5) = 0.0;
+        urdf::Model model;
+        model.initString(urdf_string);
 
-        auto timer_callback = [this, q_init, chain]() -> void
+        unsigned int nj = chain.getNrOfJoints();
+        KDL::JntArray q_min(nj);
+        KDL::JntArray q_max(nj);
+
+        std::vector<std::string> joint_names = {"world_to_l1", "l1_to_l2", "l2_to_l3", "l3_to_l4", "l4_to_l5", "l5_to_l6"};
+
+        for (unsigned int i = 0; i < nj; i++)
+        {
+            std::shared_ptr<const urdf::Joint> urdf_joint = model.getJoint(joint_names[i]);
+
+            if (urdf_joint && urdf_joint->limits)
+            {
+                q_min(i) = urdf_joint->limits->lower;
+                q_max(i) = urdf_joint->limits->upper;
+            } else {
+                q_min(i) = -M_PI/2;
+                q_max(i) = M_PI/2;
+            }
+        }
+
+        KDL::JntArray q_init(chain.getNrOfJoints());
+        q_init(0) = 1.2;
+        q_init(1) = 1.0;
+        q_init(2) = 1.0;
+        q_init(3) = 1.0;
+        q_init(4) = 1.0;
+        q_init(5) = 1.0;
+
+        auto timer_callback = [this, q_init, q_min, q_max, chain]() -> void
         {
             // get target transform
             std::string fromFrameRel = target_frame_.c_str();
@@ -76,11 +103,34 @@ public:
                                         KDL::Vector(t.transform.translation.x,
                                                     t.transform.translation.y,
                                                     t.transform.translation.z));
+
                 KDL::JntArray q_sol(chain.getNrOfJoints());
                 KDL::ChainIkSolverPos_LMA ik_solver(chain);
+                
+                /*
+                // WITH LIMITS BUT NOT GOOD SOLUTIONS
+                KDL::ChainFkSolverPos_recursive fk_solver(chain);
+                KDL::ChainIkSolverVel_pinv vel_solver(chain);
+                KDL::ChainIkSolverPos_NR_JL ik_solver(chain, q_min, q_max, fk_solver, vel_solver, 500, 1e-6);
+                */
+
                 int result = ik_solver.CartToJnt(q_init, desired_pose, q_sol);
                 if (result >= 0)
                 {
+                    for (unsigned int i = 0; i < q_sol.rows(); i++)
+                    {
+                        if (q_sol(i) < q_min(i))
+                        {
+                            q_sol(i) = q_min(i);
+                            RCLCPP_INFO(this->get_logger(), "applying limits");
+                        }
+                        else if (q_sol(i) > q_max(i))
+                        {
+                            q_sol(i) = q_max(i);
+                            RCLCPP_INFO(this->get_logger(), "applying limits");
+                        }
+                    }
+                    
                     t1 = q_sol(0);
                     t2 = q_sol(1);
                     t3 = q_sol(2);

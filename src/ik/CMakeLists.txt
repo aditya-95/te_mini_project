@@ -26,6 +26,9 @@ add_executable(ik_joint_state_publisher src/ik_joint_state_publisher.cpp)
 target_link_libraries(ik_joint_state_publisher ${orocos_kdl_LIBRARIES})
 ament_target_dependencies(ik_joint_state_publisher rclcpp sensor_msgs visualization_msgs geometry_msgs tf2 tf2_ros urdf kdl_parser)
 
+add_executable(serial src/serial.cpp)
+ament_target_dependencies(serial rclcpp sensor_msgs)
+
 add_executable(simple_marker src/simple_marker.cpp)
 ament_target_dependencies(simple_marker rclcpp interactive_markers visualization_msgs)
 
@@ -34,6 +37,7 @@ ament_target_dependencies(basic_control interactive_markers rclcpp tf2 tf2_ros t
 
 install(TARGETS
   ik_joint_state_publisher
+  serial
   simple_marker
   basic_control
   DESTINATION lib/${PROJECT_NAME})
