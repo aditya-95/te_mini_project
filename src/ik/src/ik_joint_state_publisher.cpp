@@ -39,7 +39,8 @@ public:
         t4 = t5 = t6 = 0.0;
         publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
 
-        std::string urdf_string = loadURDF("../urdf/manipulator2.urdf");
+        // load urdf from launch parameter
+        std::string urdf_string = this->declare_parameter<std::string>("robot_description", "");
 
         KDL::Tree kdl_tree;
         if (!kdl_parser::treeFromString(urdf_string, kdl_tree))

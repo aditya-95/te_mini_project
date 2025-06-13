@@ -24,7 +24,8 @@ include_directories(${orocos_kdl_INCLUDE_DIR})
 
 add_executable(ik_joint_state_publisher src/ik_joint_state_publisher.cpp)
 target_link_libraries(ik_joint_state_publisher ${orocos_kdl_LIBRARIES})
-ament_target_dependencies(ik_joint_state_publisher rclcpp sensor_msgs visualization_msgs geometry_msgs tf2 tf2_ros urdf kdl_parser)
+ament_target_dependencies(ik_joint_state_publisher rclcpp sensor_msgs visualization_msgs 
+                          geometry_msgs tf2 tf2_ros urdf kdl_parser)
 
 add_executable(serial src/serial.cpp)
 ament_target_dependencies(serial rclcpp sensor_msgs)
@@ -43,6 +44,12 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch
+    DESTINATION share/${PROJECT_NAME})
+
+install(DIRECTORY urdf
+    DESTINATION share/${PROJECT_NAME})
+
+install(DIRECTORY rviz2
     DESTINATION share/${PROJECT_NAME})
 
 ament_package()
